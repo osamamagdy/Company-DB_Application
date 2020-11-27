@@ -42,6 +42,26 @@ namespace DBapplication
             string query = "UPDATE Employee SET Salary='" + salary + "',Dno='" + D_no + "',Address='"+ address + "',Super_SSN='"+ super_ssn + "' WHERE SSN='" + ssn + "';";
             return dbMan.ExecuteNonQuery(query);
         }
+        public int Updateaddress(long ssn,string address) //for udate
+        {
+            string query = "UPDATE Employee SET Address='" + address +  "' WHERE SSN='" + ssn + "';";
+            return dbMan.ExecuteNonQuery(query);
+        }
+        public int Updatesalary(long ssn, long salary) //for udate
+        {
+            string query = "UPDATE Employee SET Salary='" + salary + "' WHERE SSN='" + ssn + "';";
+            return dbMan.ExecuteNonQuery(query);
+        }
+        public int UpdateSUpper_ssn(long ssn, long supper_ssn) //for udate
+        {
+            string query = "UPDATE Employee SET Super_SSN='" + supper_ssn + "' WHERE SSN='" + ssn + "';";
+            return dbMan.ExecuteNonQuery(query);
+        }
+        public int Update_DNO(long ssn, long DNO) //for udate
+        {
+            string query = "UPDATE Employee SET Dno='" + DNO + "' WHERE SSN='" + ssn + "';";
+            return dbMan.ExecuteNonQuery(query);
+        }
 
         public DataTable Select_emloyees_in_dep(long n)
         {

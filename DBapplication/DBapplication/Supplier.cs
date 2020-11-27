@@ -80,6 +80,13 @@ namespace DBapplication
 
         private void button1_Click(object sender, EventArgs e)
         {
+
+            if(textBox1.Text.Length==0||textBox7.Text.Length==0||textBox6.Text.Length==0||textBox5.Text.Length==0)
+            {
+                MessageBox.Show("The insertion of a new supplier failed");
+                return;
+
+            }
             int result = controllerObj.INSERT_employee(textBox1.Text,textBox7.Text,textBox6.Text,Int64.Parse(textBox5.Text),textBox4.Text,textBox3.Text,comboBox1.Text,Int64.Parse(textBox2.Text),Int64.Parse(textBox9.Text),Int64.Parse(textBox8.Text));
 
             if (result == 0)
@@ -206,6 +213,47 @@ namespace DBapplication
         private void textBox12_TextChanged(object sender, EventArgs e)
         {
             
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+
+        {
+            if(textBox5.Text.Length==0||textBox3.Text.Length==0)
+            {
+                MessageBox.Show(" Update failed");
+                    return;
+            }
+            int result = controllerObj.Updateaddress(Int64.Parse(textBox5.Text),textBox3.Text);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (textBox5.Text.Length == 0 || textBox2.Text.Length == 0)
+            {
+                MessageBox.Show(" Update failed");
+                    return;
+            }
+            int result = controllerObj.Updatesalary(Int64.Parse(textBox5.Text),Int64.Parse(textBox2.Text));
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (textBox5.Text.Length == 0 || textBox9.Text.Length == 0)
+            {
+                MessageBox.Show(" Update failed");
+                    return;
+            }
+            int result = controllerObj.UpdateSUpper_ssn(Int64.Parse(textBox5.Text),Int64.Parse(textBox9.Text));
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (textBox5.Text.Length == 0 || textBox8.Text.Length == 0)
+            {
+                MessageBox.Show(" Update failed");
+                    return;
+            }
+            int result = controllerObj.Update_DNO(Int64.Parse(textBox5.Text),Int64.Parse(textBox8.Text));
         }
 
         //private void selectAllButton_Click(object sender, EventArgs e)
