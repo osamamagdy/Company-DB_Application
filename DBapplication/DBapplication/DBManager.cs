@@ -10,14 +10,15 @@ namespace DBapplication
 {
     public class DBManager
     {
+        
 
-        static string DB_Connection_String = @"Data Source=localhost;Initial Catalog=SPJ_DB_Lab4;Integrated Security=True";
-
-        SqlConnection myConnection;
+       static string DB_Connection_String = @"Data Source=.\SQLEXPRESS;Initial Catalog=CompanyDBLab4;Integrated Security=True";
+      
+       SqlConnection myConnection;
 
         public DBManager()
         {
-            myConnection = new SqlConnection(DB_Connection_String);
+           myConnection = new SqlConnection(DB_Connection_String);      
             try
             {
                 myConnection.Open(); //Open a connection with the DB

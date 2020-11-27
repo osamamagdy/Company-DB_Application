@@ -16,34 +16,43 @@ namespace DBapplication
             dbMan = new DBManager();
         }
 
-        public int InsertSupplier(string snum, string sname, string city, int status)
+        public int INSERT_employee(string FName,string minit ,string lName, long ssn,string Bdate,string address,string sex,long salary,long super_ssn,long dno)//insert
         {
-            string query = "INSERT INTO S (S#, Name, City, Status) " +
-                            "Values ('" + snum + "','" + sname + "','" + city + "'," + status + ");";
+            //string query = "INSERT INTO Employee (S#, Name, City, Status) " +
+            //  "Values ('" + snum + "','" + sname + "','" + city + "'," + status + ");";
+
+
+
+
+
+
+            string query = "INSERT INTO Employee (Fname,Minit,Lname,SSN,Bdate,Address,Sex,Salary,Super_SSN,Dno)  " +
+              "Values ('" + FName + "','" + minit + "','" + lName + "','" + ssn + "','" + Bdate+ "','"+ address + "','"+ sex + "','" + salary+ "','" +super_ssn+ "','" + dno  + "');";
             return dbMan.ExecuteNonQuery(query);
         }
 
-        public int DeleteSupplier(string snum)
+        public int Deleteproject(string snum) //delete_project
         {
-            string query = "DELETE FROM S WHERE S#='" + snum + "';";
+            string query = "DELETE FROM Project WHERE Pnumber='" + snum + "';";
             return dbMan.ExecuteNonQuery(query);
         }
 
-        public int UpdateSupplier(string snum, string city)
+        public int Updateemployee(long ssn,int salary,int D_no,string address,long super_ssn ) //for udate
         {
-            string query = "UPDATE S SET City='" + city + "' WHERE S#='" + snum + "';";
+            string query = "UPDATE Employee SET Salary='" + salary + "',Dno='" + D_no + "',Address='"+ address + "',Super_SSN='"+ super_ssn + "' WHERE SSN='" + ssn + "';";
             return dbMan.ExecuteNonQuery(query);
         }
 
-        public DataTable SelectAllSuppliers()
+        public DataTable Select_emloyees_in_dep(long n)
         {
-            string query = "SELECT * FROM S;";
+            string query = "SELECT * FROM Employee WHERE Dno='" + n + "';";
+            
             return dbMan.ExecuteReader(query);
         }
 
-        public int CountSuppliers()
+        public int Countemloyees(int n)
         {
-            string query = "SELECT COUNT(S#) FROM S;";
+            string query = "SELECT COUNT(Essn) FROM Works_On WHERE Pno='" + n + "' ;";
             return (int)dbMan.ExecuteScalar(query);
         }
 
