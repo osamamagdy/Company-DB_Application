@@ -55,8 +55,8 @@ Essn int,
 Pno int,
 primary key (Essn,Pno),
 Hours float,
-foreign key (Essn) references Employee,
-foreign key (Pno) references Project
+foreign key (Essn) references Employee ON DELETE CASCADE ON UPDATE CASCADE ,
+foreign key (Pno) references Project ON DELETE CASCADE ON UPDATE CASCADE
 )
 -----------inserting Employee Foreign key--------------
 alter table Employee add foreign key (DNO) references Department
