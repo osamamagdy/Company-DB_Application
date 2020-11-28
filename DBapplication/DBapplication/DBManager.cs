@@ -5,20 +5,21 @@ using System.Text;
 using System.Data.SqlClient;
 using System.Data;
 using System.Windows.Forms;
+using System.Configuration;
+
 
 namespace DBapplication
 {
     public class DBManager
     {
-        
 
-       static string DB_Connection_String = @"Data Source=.\SQLEXPRESS;Initial Catalog=CompanyDBLab4;Integrated Security=True";
-      
-       SqlConnection myConnection;
+        //static string DB_Connection_String = @"Data Source=.\SQLEXPRESS;Initial Catalog=CompanyDBLab4;Integrated Security=True";
+        static string DB_Connection_String = ConfigurationManager.ConnectionStrings["myconnection"].ConnectionString;
+        SqlConnection myConnection;
 
         public DBManager()
         {
-           myConnection = new SqlConnection(DB_Connection_String);      
+            myConnection = new SqlConnection(DB_Connection_String);
             try
             {
                 myConnection.Open(); //Open a connection with the DB

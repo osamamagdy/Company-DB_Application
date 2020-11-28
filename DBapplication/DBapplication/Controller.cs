@@ -16,63 +16,77 @@ namespace DBapplication
             dbMan = new DBManager();
         }
 
-        public int INSERT_employee(string FName,string minit ,string lName, long ssn,string Bdate,string address,string sex,long salary,long super_ssn,long dno)//insert
+        public int Insert_Employee(string [] employee_details)
         {
-            //string query = "INSERT INTO Employee (S#, Name, City, Status) " +
-            //  "Values ('" + snum + "','" + sname + "','" + city + "'," + status + ");";
-
-
-
-
-
-
-            string query = "INSERT INTO Employee (Fname,Minit,Lname,SSN,Bdate,Address,Sex,Salary,Super_SSN,Dno)  " +
-              "Values ('" + FName + "','" + minit + "','" + lName + "','" + ssn + "','" + Bdate+ "','"+ address + "','"+ sex + "','" + salary+ "','" +super_ssn+ "','" + dno  + "');";
+            string query = "INSERT INTO Employee Values('"+employee_details[0] + "',";
+            for(int i = 1; i<9; i++)
+            {
+                if(employee_details[i].ToUpper()=="NULL")
+                {
+                    query += employee_details[i] + ",";
+                }
+                else
+                {
+                    query += "'" + employee_details[i] + "',";
+                }
+            }
+            if (employee_details[9].ToUpper() == "NULL")
+            {
+                query += employee_details[9] + ")";
+            }
+            else
+            {
+                query +="'" +employee_details[9] + "')";
+            }
             return dbMan.ExecuteNonQuery(query);
         }
 
-        public int Deleteproject(string snum) //delete_project
+        public int DeleteProject(int Pnum)
         {
-            string query = "DELETE FROM Project WHERE Pnumber='" + snum + "';";
+            string query = "DELETE FROM Project WHERE Pnumber ='" + Pnum + "';";
             return dbMan.ExecuteNonQuery(query);
         }
 
-        public int Updateemployee(long ssn,int salary,int D_no,string address,long super_ssn ) //for udate
+        public int UpdateAll(string Enum,string Mnum, string Dnum,String Salary , String Address)
         {
-            string query = "UPDATE Employee SET Salary='" + salary + "',Dno='" + D_no + "',Address='"+ address + "',Super_SSN='"+ super_ssn + "' WHERE SSN='" + ssn + "';";
-            return dbMan.ExecuteNonQuery(query);
-        }
-        public int Updateaddress(long ssn,string address) //for udate
-        {
-            string query = "UPDATE Employee SET Address='" + address +  "' WHERE SSN='" + ssn + "';";
-            return dbMan.ExecuteNonQuery(query);
-        }
-        public int Updatesalary(long ssn, long salary) //for udate
-        {
-            string query = "UPDATE Employee SET Salary='" + salary + "' WHERE SSN='" + ssn + "';";
-            return dbMan.ExecuteNonQuery(query);
-        }
-        public int UpdateSUpper_ssn(long ssn, long supper_ssn) //for udate
-        {
-            string query = "UPDATE Employee SET Super_SSN='" + supper_ssn + "' WHERE SSN='" + ssn + "';";
-            return dbMan.ExecuteNonQuery(query);
-        }
-        public int Update_DNO(long ssn, long DNO) //for udate
-        {
-            string query = "UPDATE Employee SET Dno='" + DNO + "' WHERE SSN='" + ssn + "';";
+            string query = "update Employee set Super_SSN ='"+ Mnum +"' , Dno = '" + Dnum + "' , Address = '"+ Address+"',Salary = '"+Salary + "'where SSN ='" + Enum + "';" ;
             return dbMan.ExecuteNonQuery(query);
         }
 
-        public DataTable Select_emloyees_in_dep(long n)
+        public int UpdateManager(string Enum, string Mnum)
         {
-            string query = "SELECT * FROM Employee WHERE Dno='" + n + "';";
-            
+            string query = "update Employee set Super_SSN ='" + Mnum + "'where SSN ='" + Enum + "';";
+            return dbMan.ExecuteNonQuery(query);
+        }
+        public int UpdateSalary(string Enum,String Salary)
+        {
+            string query = "update Employee set Salary ='" + Salary + "' where SSN ='" + Enum + "';";
+            return dbMan.ExecuteNonQuery(query);
+        }
+        public int UpdateDepartment(string Enum, string Dnum)
+        {
+            string query = "update Employee set Dno ='" + Dnum + "'where SSN ='" + Enum + "';";
+            return dbMan.ExecuteNonQuery(query);
+        }
+        public int UpdateAddress(string Enum, String Address)
+        {
+            string query = "update Employee set Address ='" +Address + "'where SSN ='" + Enum + "';";
+            return dbMan.ExecuteNonQuery(query);
+        }
+
+
+
+
+
+        public DataTable SelectAllEmployees(int Dnum)
+        {
+            string query = "SELECT * FROM Employee WHERE Dno ='"+Dnum+"';";
             return dbMan.ExecuteReader(query);
         }
 
-        public int Countemloyees(int n)
+        public int CountProjects(int Pnum)
         {
-            string query = "SELECT COUNT(Essn) FROM Works_On WHERE Pno='" + n + "' ;";
+            string query = "SELECT COUNT(Essn) FROM Works_On Where Pno='"+ Pnum + "';";
             return (int)dbMan.ExecuteScalar(query);
         }
 

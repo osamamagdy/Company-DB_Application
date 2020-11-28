@@ -5,67 +5,147 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-
 using System.Windows.Forms;
-using System.Configuration;//add by esraa
-using System.Data.SqlClient;//add by esraa
+
 namespace DBapplication
 {
     public partial class Supplier : Form
     {
-        static string DBstring = ConfigurationManager.ConnectionStrings["DBapplication.Properties.Settings.Setting"].ConnectionString;
-        SqlConnection con = new SqlConnection(DBstring);//add by esraa
         Controller controllerObj;
+
         public Supplier()
         {
             InitializeComponent();
         }
 
+        private bool CheckData_Insert()
+        {
+
+            ////////////////////////// Mandatory Data////////////////////////////
+            if (MiddleName.TextLength > 1)
+                MiddleName.Text = MiddleName.Text.Substring(0, 1);
+
+            if (String.IsNullOrEmpty(MiddleName.Text))
+            {
+                MessageBox.Show("Data is missing");
+                return false;
+            }
+            if (String.IsNullOrEmpty(FirstName.Text))
+            {
+                MessageBox.Show("Data is missing");
+                return false;
+            }
+            if (String.IsNullOrEmpty(LastName.Text))
+            {
+                MessageBox.Show("Data is missing");
+                return false;
+            }
+            if (String.IsNullOrEmpty(sNumTextBox.Text))
+            {
+                MessageBox.Show("Data is missing");
+                return false;
+            }
+            /////////////////////////////////////////Optional Data //////////////////////////
+            if (String.IsNullOrEmpty(BirthDate.Text))
+            {
+                BirthDate.Text = "NULL";
+            }
+            if (String.IsNullOrEmpty(Address.Text))
+            {
+                Address.Text = "NULL";
+            }
+            if (String.IsNullOrEmpty(Salary.Text))
+            {
+                Salary.Text = "NULL";
+            }
+            if (String.IsNullOrEmpty(ManagerSSN.Text))
+            {
+                ManagerSSN.Text = "NULL";
+            }
+            if (String.IsNullOrEmpty(DeptNum.Text))
+            {
+                DeptNum.Text = "NULL";
+            }
+
+            return true;
+        }
+
+
+
+
+
+
+
+
+
         private void Supplier_Load(object sender, EventArgs e)
         {
             controllerObj = new Controller();
+            Sex.SelectedIndex = 0;
+        }
+        private void insertButton_Click(object sender, EventArgs e)
+        {
+
+            if (!CheckData_Insert())
+            {
+                return;
+            }
+
+            String[] employee_details = new String[10] { FirstName.Text, MiddleName.Text, LastName.Text, sNumTextBox.Text, BirthDate.Text, Address.Text, Sex.Text, Salary.Text, ManagerSSN.Text, DeptNum.Text };
+
+            int result = controllerObj.Insert_Employee(employee_details);
+            if (result == 0)
+            {
+                MessageBox.Show("The insertion of a new Supplier failed");
+            }
+            else
+            {
+                MessageBox.Show("The row is inserted successfully!");
+            }
         }
 
-        //private void insertButton_Click(object sender, EventArgs e)
-        //{
-        //    // It is good to use Int16.TryParse first to check if the entered 'status' is a number
-        //    // You should valaidate from the beginning that entered value to be integer.
-        //    int result = controllerObj.InsertSupplier(sNumTextBox.Text, sNameTextBox.Text, cityTextBox.Text, Int16.Parse(statusTextBox.Text));
-        //    if (result == 0)
-        //    {
-        //        MessageBox.Show("The insertion of a new Supplier failed");
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("The row is inserted successfully!");
-        //    }
-        //}
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(ProjectNumDel.Text))
+            {
+                MessageBox.Show("Missing Data");
+                return;
+            }
+            int result = controllerObj.DeleteProject(Int16.Parse(ProjectNumDel.Text));
+            if (result == 0)
+            {
+                MessageBox.Show("No rows are deleted");
+            }
+            else
+            {
+                MessageBox.Show("The row is deleted successfully!");
+            }
+        }
 
-        //private void deleteButton_Click(object sender, EventArgs e)
-        //{
-        //    int result = controllerObj.DeleteSupplier(sNumDelTextBox.Text);
-        //    if (result == 0)
-        //    {
-        //        MessageBox.Show("No rows are deleted");
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("The row is deleted successfully!");
-        //    }
-        //}
+        private void updateButton_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(Enum.Text))
+            {
+                MessageBox.Show("No Employee Is selected");
+                return;
+            }
 
-        //private void updateButton_Click(object sender, EventArgs e)
-        //{
-        //    int result = controllerObj.UpdateSupplier(sNumUpdateTextBox.Text, cityUpdateTextBox.Text);
-        //    if (result == 0)
-        //    {
-        //        MessageBox.Show("No rows are updated");
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("The row is updated successfully");
-        //    }
-        //}
+            if (String.IsNullOrEmpty(Mnum.Text) || String.IsNullOrEmpty(Dnum.Text) || String.IsNullOrEmpty(SalaryUpdate.Text) || String.IsNullOrEmpty(AddressUpdate.Text))
+            {
+                MessageBox.Show("Datat Is missing");
+                return;
+            }
+
+            int result = controllerObj.UpdateAll(Enum.Text, Mnum.Text, Dnum.Text, SalaryUpdate.Text, AddressUpdate.Text);
+            if (result == 0)
+            {
+                MessageBox.Show("No rows are updated");
+            }
+            else
+            {
+                MessageBox.Show("The row is updated successfully");
+            }
+        }
 
         private void closeButton_Click(object sender, EventArgs e)
         {
@@ -73,37 +153,148 @@ namespace DBapplication
             this.Close();
         }
 
-        private void label10_Click(object sender, EventArgs e)
+        private void selectAllButton_Click(object sender, EventArgs e)
+        {
+            if(String.IsNullOrEmpty(DeptNumGet.Text))
+            {
+                MessageBox.Show("Missing Data");
+                return;
+            }
+
+            DataTable dt = controllerObj.SelectAllEmployees(Int16.Parse(DeptNumGet.Text));
+            EmployeesDataGrid.DataSource = dt;
+            EmployeesDataGrid.Refresh();
+
+
+        }
+
+        private void countButton_Click(object sender, EventArgs e)
+        {
+            if(String.IsNullOrEmpty(ProjectNumCount.Text))
+            {
+
+                MessageBox.Show("Missing Data");
+                return;
+            }
+
+            countTextBox.Text = controllerObj.CountProjects(Int16.Parse(ProjectNumCount.Text)).ToString();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void label3_Click(object sender, EventArgs e)
         {
 
-            if(textBox1.Text.Length==0||textBox7.Text.Length==0||textBox6.Text.Length==0||textBox5.Text.Length==0)
-            {
-                MessageBox.Show("The insertion of a new supplier failed");
-                return;
+        }
 
+        private void cityTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void countTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FirstName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        private void LastName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MiddleName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void EmployeesDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void sNumTextBox_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void textBox1_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Dnum_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DeptNumGet_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DeptNum_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DeptNum_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AddressUpdate_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void UpdateDep_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(Dnum.Text))
+            {
+                MessageBox.Show("Missing Data");
+                return;
             }
-            int result = controllerObj.INSERT_employee(textBox1.Text,textBox7.Text,textBox6.Text,Int64.Parse(textBox5.Text),textBox4.Text,textBox3.Text,comboBox1.Text,Int64.Parse(textBox2.Text),Int64.Parse(textBox9.Text),Int64.Parse(textBox8.Text));
+            int result = controllerObj.UpdateDepartment(Enum.Text, Dnum.Text);
 
             if (result == 0)
             {
-                MessageBox.Show("The insertion of a new supplier failed");
+                MessageBox.Show("No rows are updated");
             }
             else
             {
-                MessageBox.Show("The row is inserted successfully!");
+                MessageBox.Show("The row is updated successfully");
             }
-
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void UpdateSal_Click(object sender, EventArgs e)
         {
 
-            int result = controllerObj.Updateemployee(Int64.Parse(textBox5.Text),Convert.ToInt32(textBox2.Text),Convert.ToInt32(textBox8.Text),textBox3.Text,Convert.ToInt64(textBox9.Text));
+            if (String.IsNullOrEmpty(SalaryUpdate.Text))
+            {
+                MessageBox.Show("Missing Data");
+                return;
+            }
+            int result = controllerObj.UpdateSalary(Enum.Text, SalaryUpdate.Text);
+
             if (result == 0)
             {
                 MessageBox.Show("No rows are updated");
@@ -113,161 +304,48 @@ namespace DBapplication
                 MessageBox.Show("The row is updated successfully");
             }
 
-
-
         }
 
-        private void button3_Click(object sender, EventArgs e)//to show in grid
-        {
-            DataTable dt = controllerObj.Select_emloyees_in_dep(Convert.ToInt64(textBox10.Text));
-            dataGridView1.DataSource = dt;
-            dataGridView1.Refresh();
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void UpdateManager_Click(object sender, EventArgs e)
         {
 
-        }
+            if (String.IsNullOrEmpty(Mnum.Text))
+            {
+                MessageBox.Show("Missing Data");
+                return;
+            }
+            int result = controllerObj.UpdateManager(Enum.Text, Mnum.Text);
 
-        private void textBox5_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox7_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox6_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox4_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox9_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox8_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button4_Click(object sender, EventArgs e) //for delete project
-        {
-            int result = controllerObj.Deleteproject(textBox11.Text);
             if (result == 0)
             {
-                MessageBox.Show("The Project not Deleted");
+                MessageBox.Show("No rows are updated");
             }
             else
             {
-                MessageBox.Show("The project is deleted successfully");
+                MessageBox.Show("The row is updated successfully");
             }
-        }
-
-        private void textBox11_TextChanged(object sender, EventArgs e)
-        {
 
         }
 
-        private void textBox10_TextChanged(object sender, EventArgs e)
+        private void UpdateAddress_Click(object sender, EventArgs e)
         {
-            
-        }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            
-            
-
-        }
-
-        private void button5_Click(object sender, EventArgs e) //number of employees
-        {
-            
-            textBox12.Text= Convert.ToString(controllerObj.Countemloyees(Convert.ToInt32(textBox11.Text)));
-        }
-
-        private void textBox12_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-
-        {
-            if(textBox5.Text.Length==0||textBox3.Text.Length==0)
+            if (String.IsNullOrEmpty(AddressUpdate.Text))
             {
-                MessageBox.Show(" Update failed");
-                    return;
+                MessageBox.Show("Missing Data");
+                return;
             }
-            int result = controllerObj.Updateaddress(Int64.Parse(textBox5.Text),textBox3.Text);
-        }
+            int result = controllerObj.UpdateAddress(Enum.Text, AddressUpdate.Text);
 
-        private void button6_Click(object sender, EventArgs e)
-        {
-            if (textBox5.Text.Length == 0 || textBox2.Text.Length == 0)
+            if (result == 0)
             {
-                MessageBox.Show(" Update failed");
-                    return;
+                MessageBox.Show("No rows are updated");
             }
-            int result = controllerObj.Updatesalary(Int64.Parse(textBox5.Text),Int64.Parse(textBox2.Text));
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            if (textBox5.Text.Length == 0 || textBox9.Text.Length == 0)
+            else
             {
-                MessageBox.Show(" Update failed");
-                    return;
+                MessageBox.Show("The row is updated successfully");
             }
-            int result = controllerObj.UpdateSUpper_ssn(Int64.Parse(textBox5.Text),Int64.Parse(textBox9.Text));
+
         }
-
-        private void button9_Click(object sender, EventArgs e)
-        {
-            if (textBox5.Text.Length == 0 || textBox8.Text.Length == 0)
-            {
-                MessageBox.Show(" Update failed");
-                    return;
-            }
-            int result = controllerObj.Update_DNO(Int64.Parse(textBox5.Text),Int64.Parse(textBox8.Text));
-        }
-
-        //private void selectAllButton_Click(object sender, EventArgs e)
-        //{
-        //    DataTable dt = controllerObj.SelectAllSuppliers();
-        //    suppliersDataGrid.DataSource = dt;
-        //    suppliersDataGrid.Refresh();
-
-
-        //}
-
-        //private void countButton_Click(object sender, EventArgs e)
-        //{
-        //    countTextBox.Text = controllerObj.CountSuppliers().ToString();
-        //}
     }
 }
